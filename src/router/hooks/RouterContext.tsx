@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { Navigate } from '../route'
+import type { Navigate } from '../route'
 
 export interface RouterContextValue {
     navigate: Navigate
@@ -7,10 +7,10 @@ export interface RouterContextValue {
 }
 
 export const RouterContext = createContext<RouterContextValue>({
-    navigate: function (to: string): void {
+    navigate: function (): void {
         throw new Error('Function not implemented.')
     },
-    pushState: function (path: string, searchs?: URLSearchParams): void {
+    pushState: function (): void {
         throw new Error('Function not implemented.')
     },
 })

@@ -1,5 +1,5 @@
 import { useCallback, useContext, useMemo } from 'react'
-import { SearchParamsInit, SetSearchParams } from '../utils/search'
+import type { SearchParamsInit, SetSearchParams } from '../utils/search'
 import { OutletContext } from './OutletContext'
 import { RouterContext } from './RouterContext'
 

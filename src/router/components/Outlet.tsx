@@ -1,8 +1,8 @@
 import { useCallback, useContext, useEffect, useId, useState } from 'react'
-import { OutletContext, OutletContextValue } from '../hooks/OutletContext'
-import { Navigate, RouteObject } from '../route'
-import { matchChild, Params } from '../utils/path'
-import { SetSearchParams } from '../utils/search'
+import { OutletContext, type OutletContextValue } from '../hooks/OutletContext'
+import type { Navigate, RouteObject } from '../route'
+import { matchChild, type Params } from '../utils/path'
+import type { SetSearchParams } from '../utils/search'
 
 export interface OutletProps {
     onChange?: (params: Params, child?: RouteObject) => void

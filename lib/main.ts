@@ -1,4 +1,1 @@
-import { Card } from '../src/Card';
-
-export { Card };
-
+export * from '../src/router';

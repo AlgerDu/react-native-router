@@ -1,8 +1,8 @@
 import { useCallback, useContext, useEffect, useId, useMemo, useRef, useState } from 'react'
-import { OutletContext, OutletContextValue } from '../hooks/OutletContext'
-import { RouterContext, RouterContextValue } from '../hooks/RouterContext'
-import { RouteObject } from '../route'
-import { matchChild, Params } from '../utils/path'
+import { OutletContext, type OutletContextValue } from '../hooks/OutletContext'
+import { RouterContext, type RouterContextValue } from '../hooks/RouterContext'
+import { type RouteObject } from '../route'
+import { matchChild, type Params } from '../utils/path'
 
 export interface KeepAliveOutletProps {
     onChange?: (params: Params, child?: RouteObject) => void

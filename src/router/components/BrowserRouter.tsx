@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
-import { OutletContext, OutletContextValue } from '../hooks/OutletContext'
-import { RouterContext, RouterContextValue } from '../hooks/RouterContext'
-import { RouteObject } from '../route'
-import { SetSearchParams } from '../utils/search'
+import { OutletContext, type OutletContextValue } from '../hooks/OutletContext'
+import { RouterContext, type RouterContextValue } from '../hooks/RouterContext'
+import { type RouteObject } from '../route'
+import { type SetSearchParams } from '../utils/search'
 import { Outlet } from './Outlet'
 
 export interface BrowserRouterProps {
@@ -103,7 +103,7 @@ export function BrowserRouter({ routes, basePath }: BrowserRouterProps) {
         }
     }, [handleNavigate, handlePushState])
 
-    console.log(`render BrowserRouter[${id}]`, rootOutlet, currentPath, toNavigate)
+    console.log(`render BrowserRouter[${id}]`, rootOutlet,)
 
     if (!rootOutlet) {
         return undefined

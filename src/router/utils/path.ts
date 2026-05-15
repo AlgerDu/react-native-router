@@ -1,4 +1,4 @@
-import { RouteObject } from '../route'
+import { type RouteObject } from '../route'
 
 export type Params = { [key: string]: string | undefined }
 

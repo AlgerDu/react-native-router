@@ -1,7 +1,7 @@
-import { createContext, SetStateAction } from 'react'
-import { Navigate, RouteObject } from '../route'
-import { Params } from '../utils/path'
-import { SetSearchParams } from '../utils/search'
+import { createContext } from 'react'
+import type { Navigate, RouteObject } from '../route'
+import type { Params } from '../utils/path'
+import type { SetSearchParams } from '../utils/search'
 
 export interface OutletContextValue {
     pathname: string
@@ -23,10 +23,10 @@ export const OutletContext = createContext<OutletContextValue>({
         path: '',
         element: undefined,
     },
-    navigate: function (to: string): void {
+    navigate: function (): void {
         throw new Error('Function not implemented.')
     },
-    setSearchParams: function (value: SetStateAction<URLSearchParams>): void {
+    setSearchParams: function (): void {
         throw new Error('Function not implemented.')
     },
 })
