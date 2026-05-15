@@ -6,6 +6,10 @@ import { matchChild, type Params } from '../utils/path'
 
 export interface KeepAliveOutletProps {
     onChange?: (params: Params, child?: RouteObject) => void
+
+    /**
+     * 最大的缓存数量
+     */
     max?: number
 }
 

@@ -6,7 +6,14 @@ import { type SetSearchParams } from '../utils/search'
 import { Outlet } from './Outlet'
 
 export interface BrowserRouterProps {
+    /**
+     * 路由配置
+     */
     routes: RouteObject[]
+
+    /**
+     * 应用的根路径
+     */
     basePath?: string
 }
 
@@ -63,10 +70,6 @@ export function BrowserRouter({ routes, basePath }: BrowserRouterProps) {
         return () => window.removeEventListener('popstate', handlePopstate)
     }, [setNavigate])
 
-    // useEffect(() => {
-    //     history.pushState({}, '', currentPath + searchParams.toString())
-    // }, [currentPath, searchParams])
-
     useEffect(() => {
         if (!trigger || currentPath.current === toNavigate.current) {
             return
@@ -103,7 +106,7 @@ export function BrowserRouter({ routes, basePath }: BrowserRouterProps) {
         }
     }, [handleNavigate, handlePushState])
 
-    console.log(`render BrowserRouter[${id}]`, rootOutlet,)
+    console.log(`render BrowserRouter[${id}]`, rootOutlet)
 
     if (!rootOutlet) {
         return undefined
