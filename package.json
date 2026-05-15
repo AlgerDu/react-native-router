@@ -6,13 +6,13 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/react-block-editor.umd.cjs",
-  "module": "./dist/react-block-editor.js",
-  "types": "./dist/react-block-editor.d.ts",
+  "main": "./dist/react-native-router.umd.cjs",
+  "module": "./dist/react-native-router.js",
+  "types": "./dist/react-native-router.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/react-block-editor.js",
-      "require": "./dist/react-block-editor.umd.cjs"
+      "import": "./dist/react-native-router.js",
+      "require": "./dist/react-native-router.umd.cjs"
     }
   },
   "scripts": {

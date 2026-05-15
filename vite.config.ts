@@ -19,7 +19,7 @@ export default defineConfig({
     lib: {
       entry: resolve(import.meta.dirname, 'lib/main.ts'),
       name: 'NativeRouter',
-      fileName: 'react-block-editor',
+      fileName: 'react-native-router',
       formats: ['es'],
     },
     rollupOptions: {
