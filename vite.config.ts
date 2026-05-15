@@ -1,4 +1,5 @@
-import react from '@vitejs/plugin-react-swc';
+import babel from '@rolldown/plugin-babel';
+import react, { reactCompilerPreset } from '@vitejs/plugin-react';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
@@ -7,6 +8,7 @@ import dts from 'vite-plugin-dts';
 export default defineConfig({
   plugins: [
     react(),
+    babel({ presets: [reactCompilerPreset({ target: '18', compilationMode: 'annotation' })] }),
     dts({
       rollupTypes: true,
       tsconfigPath: './tsconfig.app.json',
@@ -16,8 +18,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(import.meta.dirname, 'lib/main.ts'),
-      name: 'MyLib',
-      fileName: 'my-lib',
+      name: 'NativeRouter',
+      fileName: 'react-block-editor',
       formats: ['es'],
     },
     rollupOptions: {

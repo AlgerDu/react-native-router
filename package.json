@@ -1,18 +1,18 @@
 {
-  "name": "vite-react-library",
+  "name": "react-native-router",
   "private": true,
   "version": "0.1.0",
   "type": "module",
   "files": [
     "dist"
   ],
-  "main": "./dist/my-lib.umd.cjs",
-  "module": "./dist/my-lib.js",
-  "types": "./dist/my-lib.d.ts",
+  "main": "./dist/react-block-editor.umd.cjs",
+  "module": "./dist/react-block-editor.js",
+  "types": "./dist/react-block-editor.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/my-lib.js",
-      "require": "./dist/my-lib.umd.cjs"
+      "import": "./dist/react-block-editor.js",
+      "require": "./dist/react-block-editor.umd.cjs"
     }
   },
   "scripts": {
@@ -26,18 +26,22 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@types/node": "^24.10.1",
     "@types/react": "^18.3.28",
     "@types/react-dom": "^18.3.7",
-    "@vitejs/plugin-react-swc": "^4.2.2",
-    "eslint": "^9.39.1",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.24",
-    "globals": "^16.5.0",
-    "typescript": "~5.9.3",
-    "typescript-eslint": "^8.48.0",
-    "vite": "^8.0.8",
-    "vite-plugin-dts": "^4.5.4"
+    "vite-plugin-dts": "^4.5.4",
+    "@babel/core": "^7.29.0",
+    "@eslint/js": "^10.0.1",
+    "@rolldown/plugin-babel": "^0.2.3",
+    "@types/babel__core": "^7.20.5",
+    "@types/node": "^24.12.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "^10.3.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.6.0",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.59.2",
+    "vite": "^8.0.12"
   }
 }
