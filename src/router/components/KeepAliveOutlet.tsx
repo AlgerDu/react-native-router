@@ -1,4 +1,5 @@
 import { useCallback, useContext, useEffect, useId, useMemo, useRef, useState } from 'react'
+import { NavigateContext, type NavigateContextValue } from '../hooks/NavigateContext'
 import { OutletContext, type OutletContextValue } from '../hooks/OutletContext'
 import { RouterContext, type RouterContextValue } from '../hooks/RouterContext'
 import { type RouteObject } from '../route'
@@ -140,6 +141,7 @@ export function KeepAliveOutlet({ onChange, max = 8 }: KeepAliveOutletProps) {
 
     useEffect(() => {
         if (!route.children || toMatchPaths.length === 0) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             tryToCacheContext(undefined)
             return
         }
@@ -153,8 +155,6 @@ export function KeepAliveOutlet({ onChange, max = 8 }: KeepAliveOutletProps) {
                 path: '',
                 element: undefined,
             },
-            navigate: (to) => handleNavigate(routeContext.pathname, to),
-            setSearchParams: (value) => handleSetSearchParmas(routeContext.pathname, value),
         }
 
         let childRoute = route.children.find((i) => {
@@ -220,6 +220,11 @@ export function KeepAliveOutlet({ onChange, max = 8 }: KeepAliveOutletProps) {
                 }}
             >
                 {items.map((i) => {
+                    const navigateValue: NavigateContextValue = {
+                        navigate: (to) => handleNavigate(i.pathname, to),
+                        setSearchParams: (value) => handleSetSearchParmas(i.pathname, value),
+                    }
+
                     return (
                         <div
                             key={i.pathname}
@@ -232,7 +237,9 @@ export function KeepAliveOutlet({ onChange, max = 8 }: KeepAliveOutletProps) {
                             }}
                         >
                             <OutletContext.Provider value={i}>
-                                {i.route.element}
+                                <NavigateContext.Provider value={navigateValue}>
+                                    {i.route.element}
+                                </NavigateContext.Provider>
                             </OutletContext.Provider>
                         </div>
                     )

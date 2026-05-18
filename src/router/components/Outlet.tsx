@@ -1,4 +1,5 @@
-import { useCallback, useContext, useEffect, useId, useState } from 'react'
+import { useCallback, useContext, useEffect, useId, useMemo, useState } from 'react'
+import { NavigateContext, type NavigateContextValue } from '../hooks/NavigateContext'
 import { OutletContext, type OutletContextValue } from '../hooks/OutletContext'
 import type { Navigate, RouteObject } from '../route'
 import { matchChild, type Params } from '../utils/path'
@@ -10,8 +11,8 @@ export interface OutletProps {
 
 export function Outlet({ onChange }: OutletProps) {
     const { route, toMatchPaths, params, searchParams, pathname } = useContext(OutletContext)
-    const id = useId()
 
+    const id = useId()
     const [childContext, setChildContext] = useState<OutletContextValue>()
 
     const handleNavigate = useCallback<Navigate>((to) => {
@@ -47,6 +48,7 @@ export function Outlet({ onChange }: OutletProps) {
 
     useEffect(() => {
         if (!route.children) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setChildContext(undefined)
             return
         }
@@ -60,8 +62,6 @@ export function Outlet({ onChange }: OutletProps) {
                 path: '',
                 element: undefined,
             },
-            navigate: handleNavigate,
-            setSearchParams: handleSetSearchParmas,
         }
 
         const childRoute = route.children.find((i) => {
@@ -96,21 +96,26 @@ export function Outlet({ onChange }: OutletProps) {
                     params: { ...params },
                     searchParams,
                     route: child,
-                    navigate: handleNavigate,
-                    setSearchParams: handleSetSearchParmas,
                 })
                 return
             }
         }
 
         setChildContext(undefined)
-    }, [handleNavigate, handleSetSearchParmas, params, pathname, route, searchParams, toMatchPaths])
+    }, [params, pathname, route, searchParams, toMatchPaths])
 
     useEffect(() => {
         if (onChange) {
             onChange(childContext?.params ?? {}, childContext?.route)
         }
     }, [childContext, onChange])
+
+    const navigateValue = useMemo((): NavigateContextValue => {
+        return {
+            navigate: handleNavigate,
+            setSearchParams: handleSetSearchParmas,
+        }
+    }, [handleNavigate, handleSetSearchParmas])
 
     console.log(`render outlet[${id} | ${childContext?.pathname}]`, childContext)
 
@@ -120,7 +125,9 @@ export function Outlet({ onChange }: OutletProps) {
 
     return (
         <OutletContext.Provider value={childContext}>
-            {childContext.route.element}
+            <NavigateContext.Provider value={navigateValue}>
+                {childContext.route.element}
+            </NavigateContext.Provider>
         </OutletContext.Provider>
     )
 }
