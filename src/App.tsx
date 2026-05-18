@@ -5,25 +5,23 @@ import { Home } from './example/pages/Home'
 import { BrowserRouter, type RouteObject } from './router'
 
 function App() {
-    return <BrowserRouter routes={routs} />
+    return <BrowserRouter router={route} />
 }
 
 export default App
 
-const routs: RouteObject[] = [
-    {
-        path: '/',
-        element: <Exapmpe />,
-        indexChild: 'home',
-        children: [
-            {
-                path: 'home',
-                element: <Home />,
-            },
-            {
-                path: 'about',
-                element: <About />,
-            },
-        ],
-    },
-]
+const route: RouteObject = {
+    path: '/',
+    element: <Exapmpe />,
+    indexChild: 'home',
+    children: [
+        {
+            path: 'home',
+            element: <Home />,
+        },
+        {
+            path: 'about',
+            element: <About />,
+        },
+    ],
+}
