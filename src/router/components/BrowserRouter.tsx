@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
+import { NavigateContext, type NavigateContextValue } from '../hooks/NavigateContext'
 import { OutletContext, type OutletContextValue } from '../hooks/OutletContext'
 import { RouterContext, type RouterContextValue } from '../hooks/RouterContext'
-import { type RouteObject } from '../route'
+import { type Navigate, type RouteObject } from '../route'
 import { type SetSearchParams } from '../utils/search'
 import { Outlet } from './Outlet'
 
@@ -9,7 +10,7 @@ export interface BrowserRouterProps {
     /**
      * 路由配置
      */
-    routes: RouteObject[]
+    router: RouteObject
 
     /**
      * 应用的根路径
@@ -17,105 +18,129 @@ export interface BrowserRouterProps {
     basePath?: string
 }
 
-export function BrowserRouter({ routes, basePath }: BrowserRouterProps) {
+const location = window.location
+
+/**
+ * 处理和浏览器的交互
+ */
+export function BrowserRouter({ router, basePath }: BrowserRouterProps) {
     const id = useId()
 
-    const currentPath = useRef('')
-    const toNavigate = useRef(window.location.pathname)
+    const pathRef = useRef(location.pathname)
+    const searchRef = useRef(`${new URLSearchParams(location.search).sort()}`)
 
-    const [trigger, setTrigger] = useState('0')
-    const [searchParams, setSearchParams] = useState<URLSearchParams>(
-        new URLSearchParams(window.location.search),
-    )
-
-    const [rootOutlet, setRootOutlet] = useState<OutletContextValue>()
-
-    const setNavigate = useCallback((to: string) => {
-        toNavigate.current = to
-        setTrigger(`${Math.random()}`)
-    }, [])
-
-    const handleNavigate = useCallback(
-        (path: string) => {
-            setNavigate(path)
-            history.pushState({}, '', window.location.origin + path)
+    const buildRoot = useCallback(
+        (path: string, search: string): OutletContextValue => {
+            if (basePath) {
+                path = path.replace(basePath, '')
+            }
+            const paths = path.split('/')
+            return {
+                params: {},
+                searchParams: new URLSearchParams(search),
+                route: router,
+                toMatchPaths: paths.slice(1),
+                pathname: '',
+            }
         },
-        [setNavigate],
+        [basePath, router],
+    )
+    const [root, setRoot] = useState(() =>
+        buildRoot(location.pathname, `${new URLSearchParams(location.search).sort()}`),
     )
 
-    const handleSetSearchParmas = useCallback<SetSearchParams>((value) => {
-        setSearchParams(value)
-    }, [])
-
-    const handlePushState = useCallback((path: string, searchParams?: URLSearchParams) => {
-        if (searchParams && searchParams.size > 0) {
-            path += `?${searchParams}`
+    const pushState = useCallback((path: string, search?: URLSearchParams | string) => {
+        if (search) {
+            if (typeof search !== 'string') {
+                search = `${search.sort()}`
+            }
+        } else {
+            search = ''
         }
 
-        const fullPath = window.location.origin + path
-        currentPath.current = path
+        let full = window.location.origin + path
+        if (search) {
+            full = full + '?' + search
+        }
 
-        history.pushState({}, '', fullPath)
+        pathRef.current = path
+        searchRef.current = search
+
+        history.pushState({}, '', full)
     }, [])
+
+    const navigate = useCallback<Navigate>(
+        (to: string) => {
+            const [path, originalSearch] = to.split('?')
+
+            let search = ''
+            if (originalSearch) {
+                search = `${new URLSearchParams(originalSearch).sort()}`
+            }
+
+            if (path === pathRef.current && search === searchRef.current) {
+                return
+            }
+
+            pushState(to, search)
+            setRoot(buildRoot(path, search))
+        },
+        [buildRoot, pushState],
+    )
+
+    const setSearch = useCallback<SetSearchParams>(
+        (value) => {
+            if (typeof value === 'function') {
+                value = value(new URLSearchParams(searchRef.current))
+            }
+
+            const search = `${value.sort()}`
+            if (search === searchRef.current) {
+                return
+            }
+
+            pushState(pathRef.current, search)
+            setRoot(buildRoot(pathRef.current, search))
+        },
+        [buildRoot, pushState],
+    )
 
     useEffect(() => {
         const handlePopstate = (e: PopStateEvent) => {
-            setSearchParams(new URLSearchParams(window.location.search))
-            setNavigate(window.location.pathname)
-
+            navigate(location.pathname + '?' + location.pathname)
             e.preventDefault()
         }
 
         window.addEventListener('popstate', handlePopstate)
         return () => window.removeEventListener('popstate', handlePopstate)
-    }, [setNavigate])
+    }, [navigate])
 
-    useEffect(() => {
-        if (!trigger || currentPath.current === toNavigate.current) {
-            return
-        }
-
-        currentPath.current = toNavigate.current
-        toNavigate.current = ''
-
-        let path = currentPath.current
-        if (basePath) {
-            path = path.replace(basePath, '')
-        }
-        const paths = path.split('/')
-
-        setRootOutlet({
-            params: {},
-            searchParams,
-            route: {
-                path: '/',
-                element: undefined,
-                children: routes,
-            },
-            toMatchPaths: paths.slice(1),
-            pathname: '',
-            navigate: handleNavigate,
-            setSearchParams: handleSetSearchParmas,
-        })
-    }, [basePath, handleNavigate, handleSetSearchParmas, routes, searchParams, trigger])
-
-    const routerContext = useMemo((): RouterContextValue => {
+    const routerValue = useMemo((): RouterContextValue => {
         return {
-            navigate: handleNavigate,
-            pushState: handlePushState,
+            navigate: navigate,
+            pushState: pushState,
         }
-    }, [handleNavigate, handlePushState])
+    }, [navigate, pushState])
 
-    console.log(`render BrowserRouter[${id}]`, rootOutlet)
+    const navigateValue = useMemo((): NavigateContextValue => {
+        return {
+            navigate,
+            setSearchParams: setSearch,
+        }
+    }, [navigate, setSearch])
 
-    if (!rootOutlet) {
+    console.log(`render BrowserRouter[${id}]`, root)
+
+    if (!root) {
         return undefined
     }
 
     return (
-        <RouterContext.Provider value={routerContext}>
-            <OutletContext.Provider value={rootOutlet}>
-                <Outlet />
+        <RouterContext.Provider value={routerValue}>
+            <OutletContext.Provider value={root}>
+                <NavigateContext.Provider value={navigateValue}>
+                    <Outlet />
+                </NavigateContext.Provider>
             </OutletContext.Provider>
         </RouterContext.Provider>
     )
