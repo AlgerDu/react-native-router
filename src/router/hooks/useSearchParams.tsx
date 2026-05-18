@@ -1,5 +1,6 @@
 import { useCallback, useContext, useMemo } from 'react'
 import type { SearchParamsInit, SetSearchParams } from '../utils/search'
+import { NavigateContext } from './NavigateContext'
 import { OutletContext } from './OutletContext'
 import { RouterContext } from './RouterContext'
 
@@ -7,7 +8,8 @@ export function useSearchParams(
     defaultInit?: SearchParamsInit,
 ): [URLSearchParams, SetSearchParams] {
     const { pushState } = useContext(RouterContext)
-    const { searchParams, setSearchParams, pathname } = useContext(OutletContext)
+    const { searchParams, pathname } = useContext(OutletContext)
+    const { setSearchParams } = useContext(NavigateContext)
 
     const handleSetSearchParmas = useCallback<SetSearchParams>(
         (value) => {

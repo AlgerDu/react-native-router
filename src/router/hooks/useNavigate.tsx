@@ -1,10 +1,12 @@
 import { useCallback, useContext } from 'react'
+import { NavigateContext } from './NavigateContext'
 import { OutletContext } from './OutletContext'
 import { RouterContext } from './RouterContext'
 
 export function useNavigate() {
     const { navigate: rootNavigate, pushState } = useContext(RouterContext)
-    const { navigate, pathname } = useContext(OutletContext)
+    const { pathname } = useContext(OutletContext)
+    const { navigate } = useContext(NavigateContext)
 
     return useCallback(
         (to: string) => {
