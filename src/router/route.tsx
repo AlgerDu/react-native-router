@@ -2,6 +2,9 @@ import { type ReactNode } from 'react'
 
 export type RouteChildrenLoader = () => RouteObject[]
 
+/**
+ * 导航函数（注意：包含 search ）
+ */
 export type Navigate = (to: string) => void
 
 /**
