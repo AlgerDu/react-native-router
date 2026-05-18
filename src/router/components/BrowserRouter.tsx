@@ -38,7 +38,11 @@ export function BrowserRouter({ router, basePath }: BrowserRouterProps) {
             return {
                 params: {},
                 searchParams: new URLSearchParams(search),
-                route: router,
+                route: {
+                    path: '',
+                    element: undefined,
+                    children: [router],
+                },
                 toMatchPaths: paths.slice(1),
                 pathname: '',
             }
