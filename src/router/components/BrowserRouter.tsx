@@ -49,14 +49,17 @@ export function BrowserRouter({ router, basePath }: BrowserRouterProps) {
         },
         [basePath, router],
     )
-    const [root, setRoot] = useState(() =>
-        buildRoot(location.pathname, `${new URLSearchParams(location.search).sort()}`),
-    )
+    const [root, setRoot] = useState(() => {
+        const sp = new URLSearchParams(location.search)
+        sp.sort()
+        return buildRoot(location.pathname, `${sp}`)
+    })
 
     const pushState = useCallback((path: string, search?: URLSearchParams | string) => {
         if (search) {
             if (typeof search !== 'string') {
-                search = `${search.sort()}`
+                search.sort()
+                search = `${search}`
             }
         } else {
             search = ''
