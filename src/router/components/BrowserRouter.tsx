@@ -27,7 +27,7 @@ export function BrowserRouter({ router, basePath }: BrowserRouterProps) {
     const id = useId()
 
     const pathRef = useRef(location.pathname)
-    const searchRef = useRef(`${new URLSearchParams(location.search).sort()}`)
+    const searchRef = useRef(`${new URLSearchParams(location.search)}`)
 
     const buildRoot = useCallback(
         (path: string, search: string): OutletContextValue => {
@@ -50,9 +50,7 @@ export function BrowserRouter({ router, basePath }: BrowserRouterProps) {
         [basePath, router],
     )
     const [root, setRoot] = useState(() => {
-        const sp = new URLSearchParams(location.search)
-        sp.sort()
-        return buildRoot(location.pathname, `${sp}`)
+        return buildRoot(location.pathname, location.search)
     })
 
     const pushState = useCallback((path: string, search?: URLSearchParams | string) => {
@@ -82,7 +80,9 @@ export function BrowserRouter({ router, basePath }: BrowserRouterProps) {
 
             let search = ''
             if (originalSearch) {
-                search = `${new URLSearchParams(originalSearch).sort()}`
+                const tmp = new URLSearchParams(originalSearch)
+                tmp.sort()
+                search = `${tmp.toString()}`
             }
 
             if (path === pathRef.current && search === searchRef.current) {
@@ -101,7 +101,8 @@ export function BrowserRouter({ router, basePath }: BrowserRouterProps) {
                 value = value(new URLSearchParams(searchRef.current))
             }
 
-            const search = `${value.sort()}`
+            value.sort()
+            const search = `${value}`
             if (search === searchRef.current) {
                 return
             }
