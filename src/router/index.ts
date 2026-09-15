@@ -7,7 +7,7 @@ import { useLocation } from './hooks/useLocation'
 import { useNavigate } from './hooks/useNavigate'
 import { useParams } from './hooks/useParams'
 import { useSearchParams } from './hooks/useSearchParams'
-import type { useTypeSearchParams } from './hooks/useTypeSearchParams'
+import { useTypeSearchParams } from './hooks/useTypeSearchParams'
 import type { RouteObject } from './route'
 import type { Params } from './utils/path'
 
@@ -19,4 +19,4 @@ export { OutletContext, useLocation, useNavigate, useParams, useSearchParams }
 
 export { BrowserRouter, KeepAliveOutlet, Link, Outlet }
 
-export type { useTypeSearchParams }
+export { useTypeSearchParams }
