@@ -1,6 +1,7 @@
 {
   "name": "@algerdu/react-native-router",
   "version": "0.2.1",
+  "homepage": "https://github.com/AlgerDu/react-native-router",
   "type": "module",
   "files": [
     "dist"
