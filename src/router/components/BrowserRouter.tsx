@@ -89,7 +89,7 @@ export function BrowserRouter({ router, basePath }: BrowserRouterProps) {
                 return
             }
 
-            pushState(to, search)
+            pushState(path, search)
             setRoot(buildRoot(path, search))
         },
         [buildRoot, pushState],
